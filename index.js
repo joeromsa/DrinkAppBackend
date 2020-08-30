@@ -19,7 +19,7 @@ const requestLogger = (req, res, next) => {
 app.use(requestLogger)
 
 app.get('/', (req, res) => {
-    res.send('<h1>Hello World!</h1>')
+    res.send('<h1>Drink App back-end</h1>')
 })
 
 app.get('/api/drinks', (req, res) => {
@@ -42,10 +42,11 @@ app.get('/api/drinks/:id', (req, res, next) => {
 })
 
 app.delete('/api/drinks/:id', (req, res) => {
-    const id = Number(req.params.id)
-    drinks = drinks.filter(drink => drink.id !== id)
-
-    res.status(204).end()
+    Drink.findByIdAndRemove(req.params.id)
+        .then(result => {
+            res.status(204).end()
+        })
+        .catch(error => next(error))
 })
 
 app.post('/api/drinks', (req, res) => {
