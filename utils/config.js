@@ -1,3 +1,7 @@
+/**
+ * Handles sensitive data stored in .env file 
+ */
+
 require('dotenv').config()
 
 const PORT = process.env.PORT

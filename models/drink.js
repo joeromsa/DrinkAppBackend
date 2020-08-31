@@ -1,7 +1,13 @@
+/**
+ * Model for MongoDB drink object
+ */
+
 const mongoose = require('mongoose')
 
+// set for deprication warning
 mongoose.set('useFindAndModify', false)
 
+//Schema detailing drink object. Gives type and makes them required.
 const drinkSchema = new mongoose.Schema({
     name: {type: String, required: true},
     date: {type: Date, required: true},
@@ -11,6 +17,7 @@ const drinkSchema = new mongoose.Schema({
     description: {type: String, required: true},
 })
 
+// converts data from DB into JSON. Makes converts id to String, and removes _id and __v. 
 drinkSchema.set('toJSON', {
     transform: (document, returnedObject) => {
         returnedObject.id = returnedObject._id.toString()

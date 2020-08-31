@@ -1,12 +1,19 @@
+/**
+ * Controller for routes related to drinks.
+ */
+
+
 const drinksRouter = require('express').Router()
 const Drink = require('../models/drink')
 
+// GET all drinks from DB. 
 drinksRouter.get('/', (req, res) => {
     Drink.find({}).then(drinks => {
         res.json(drinks)
     })
 })
 
+// GET single drink from DB based on its id.
 drinksRouter.get('/:id', (req, res, next) => {
     Drink.findById(req.params.id)
     .then(drink => {
@@ -20,6 +27,7 @@ drinksRouter.get('/:id', (req, res, next) => {
     .catch(error => next(error))
 })
 
+// DELETE drink from DB based on its id.
 drinksRouter.delete('/:id', (req, res) => {
     Drink.findByIdAndRemove(req.params.id)
         .then(result => {
@@ -28,12 +36,10 @@ drinksRouter.delete('/:id', (req, res) => {
         .catch(error => next(error))
 })
 
+
+// POST adds new drink object to DB. Creates new drink object from request and saves it.
 drinksRouter.post('/', (req, res, next) => {
     const body = req.body
-
-    if (body.name === undefined) {
-        return res.status(400).json({ error: 'name missing' })
-    }
 
     const drink = new Drink({
         name: body.name,

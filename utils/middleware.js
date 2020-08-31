@@ -1,5 +1,10 @@
+/**
+ * Custom middleware
+ */
+
 const logger = require('./logger')
 
+// Takes info from request, formats, and sends it to logger to be printed on console.
 const requestLogger = (req, res, next) => {
     logger.info('Method: ', req.method)
     logger.info('Path: ', req.path)
@@ -8,10 +13,13 @@ const requestLogger = (req, res, next) => {
     next()
 }
 
+// If endpoint does not match any of the routes in the controller, response is given status code of 404.
 const unknownEndpoint = (req, res) => {
     res.status(404).send({ error: 'unknown endpoint' })
 }
 
+// If error is found, message is sent to logger to be printed, and then different error types are checked to
+// send correct response. If not matched, error passed to express' error handler.
 const errorHandler = (error, req, res, next) => {
     logger.error(error.message)
 
