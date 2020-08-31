@@ -13,12 +13,12 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
     }) 
 
 const drinkSchema = new mongoose.Schema({
-    name: String,
-    date: Date,
-    glassware: String,
-    ingredients: [String],
-    measurements: [String],
-    description: String,
+    name: {type: String, required: true},
+    date: {type: Date, required: true},
+    glassware: {type: String, required: true},
+    ingredients: {type: [String], required: true},
+    measurements: {type: [String], required: true},
+    description: {type: String, required: true},
 })
 
 drinkSchema.set('toJSON', {

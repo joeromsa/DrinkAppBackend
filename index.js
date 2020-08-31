@@ -49,7 +49,7 @@ app.delete('/api/drinks/:id', (req, res) => {
         .catch(error => next(error))
 })
 
-app.post('/api/drinks', (req, res) => {
+app.post('/api/drinks', (req, res, next) => {
     const body = req.body
 
     if (body.name === undefined) {
@@ -65,9 +65,12 @@ app.post('/api/drinks', (req, res) => {
         description: body.description,
     })
 
-    drink.save().then(savedDrink => {
-        res.json(savedDrink)
-    })
+    drink.save()
+        .then(savedDrink => savedDrink.toJSON())
+        .then(savedAndFormattedDrink => {
+            res.json(savedAndFormattedDrink)
+        })
+        .catch(error => next(error))
 })
 
 const unknownEndpoint = (req, res) => {
@@ -81,6 +84,9 @@ const errorHandler = (error, req, res, next) => {
 
     if (error.name === 'CastError') {
         return res.status(400).send({ error: 'malformatted id' })
+    }
+    else if (error.name === 'ValidationError') {
+        return res.status(400).json({ error: error.message })
     }
 
     next(error)
