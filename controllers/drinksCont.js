@@ -40,7 +40,7 @@ drinksRouter.post('/', async (req, res) => {
         date: new Date(),
         glassware: body.glassware,
         ingredients: body.ingredients,
-        measurements: body.measurements,
+        //measurements: body.measurements,
         description: body.description,
     })
 

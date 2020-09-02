@@ -12,8 +12,8 @@ const drinkSchema = new mongoose.Schema({
     name: {type: String, required: true},
     date: {type: Date, required: true},
     glassware: {type: String, required: true},
-    ingredients: {type: [String], required: true},
-    measurements: {type: [String], required: true},
+    ingredients: {type: [{quantity: String, ingredient: String}], required: true},
+    //measurements: {type: [String], required: true},
     description: {type: String, required: true},
 })
 
@@ -23,6 +23,8 @@ drinkSchema.set('toJSON', {
         returnedObject.id = returnedObject._id.toString()
         delete returnedObject._id
         delete returnedObject.__v
+
+        returnedObject.ingredients.forEach(e => delete e._id)
     }
 })
 
