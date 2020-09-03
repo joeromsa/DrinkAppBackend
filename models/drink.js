@@ -13,8 +13,8 @@ const drinkSchema = new mongoose.Schema({
     date: {type: Date, required: true},
     glassware: {type: String, required: true},
     ingredients: {type: [{quantity: String, ingredient: String}], required: true},
-    //measurements: {type: [String], required: true},
     description: {type: String, required: true},
+    drinkImage: {type: String}
 })
 
 // converts data from DB into JSON. Makes converts id to String, and removes _id and __v. 
@@ -24,7 +24,7 @@ drinkSchema.set('toJSON', {
         delete returnedObject._id
         delete returnedObject.__v
 
-        returnedObject.ingredients.forEach(e => delete e._id)
+        returnedObject.ingredients.forEach(i => delete i._id)
     }
 })
 

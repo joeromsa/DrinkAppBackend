@@ -6,6 +6,34 @@
 
 const drinksRouter = require('express').Router()
 const Drink = require('../models/drink')
+const multer = require('multer')
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, './uploads/')
+    },
+    filename: (req, file, cb) => {
+        cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname)
+    }
+})
+
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype === 'image/jpeg' || 'image/png') {
+        cb(null, true)
+    }
+    else {
+        cb(null, false)
+    }
+}
+    
+const upload = multer({
+    storage: storage, 
+    limits: {
+        fileSize: 1024 * 1024 * 5
+    },
+    fileFilter: fileFilter
+})
+
 
 // GET all drinks from DB. 
 drinksRouter.get('/', async (req, res) => {
@@ -32,16 +60,18 @@ drinksRouter.delete('/:id', async (req, res) => {
 
 
 // POST adds new drink object to DB. Creates new drink object from request and saves it.
-drinksRouter.post('/', async (req, res) => {
+drinksRouter.post('/', upload.single('drinkImage'), async (req, res) => {
     const body = req.body
+
+    //console.log(body.ingredients.substring(0, body.ingredients.length - 3))
 
     const drink = new Drink({
         name: body.name,
         date: new Date(),
         glassware: body.glassware,
-        ingredients: body.ingredients,
-        //measurements: body.measurements,
+        ingredients: JSON.parse(body.ingredients.substring(0, body.ingredients.length - 3)),
         description: body.description,
+        drinkImage: req.file.path
     })
 
     const savedDrink = await drink.save()
