@@ -7,6 +7,7 @@
 const drinksRouter = require('express').Router()
 const Drink = require('../models/drink')
 const multer = require('multer')
+const fs = require('fs').promises
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -54,7 +55,14 @@ drinksRouter.get('/:id', async (req, res) => {
 
 // DELETE drink from DB based on its id.
 drinksRouter.delete('/:id', async (req, res) => {
-    await Drink.findByIdAndRemove(req.params.id)
+    const removed = await Drink.findByIdAndRemove(req.params.id)
+    const path = `${removed.drinkImage}`
+    try {
+        await fs.unlink(path)
+    }
+    catch (error) {
+        console.log(error)
+    }
     res.status(204).end()
 })
 
@@ -63,13 +71,11 @@ drinksRouter.delete('/:id', async (req, res) => {
 drinksRouter.post('/', upload.single('drinkImage'), async (req, res) => {
     const body = req.body
 
-    //console.log(body.ingredients.substring(0, body.ingredients.length - 3))
-
     const drink = new Drink({
         name: body.name,
         date: new Date(),
         glassware: body.glassware,
-        ingredients: JSON.parse(body.ingredients.substring(0, body.ingredients.length - 3)),
+        ingredients: JSON.parse(body.ingredients),
         description: body.description,
         drinkImage: req.file.path
     })
