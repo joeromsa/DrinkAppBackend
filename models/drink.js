@@ -14,7 +14,8 @@ const drinkSchema = new mongoose.Schema({
     glassware: {type: String, required: true},
     ingredients: {type: [{quantity: String, ingredient: String}], required: true},
     description: {type: String, required: true},
-    drinkImage: {type: String}
+    drinkImage: {type: String, required: false},
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 })
 
 // converts data from DB into JSON. Makes converts id to String, and removes _id and __v. 

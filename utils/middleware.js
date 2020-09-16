@@ -3,6 +3,7 @@
  */
 
 const logger = require('./logger')
+const { response } = require('express')
 
 // Takes info from request, formats, and sends it to logger to be printed on console.
 const requestLogger = (req, res, next) => {
@@ -28,6 +29,9 @@ const errorHandler = (error, req, res, next) => {
     }
     else if (error.name === 'ValidationError') {
         return res.status(400).json({ error: error.message })
+    }
+    else if (error.name === 'JsonWebTokenError') {
+        return res.status(401).json({ error: 'invalid token' })
     }
 
     next(error)
