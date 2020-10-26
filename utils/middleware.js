@@ -3,7 +3,6 @@
  */
 
 const logger = require('./logger')
-const { response } = require('express')
 
 // Takes info from request, formats, and sends it to logger to be printed on console.
 const requestLogger = (req, res, next) => {
